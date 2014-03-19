@@ -449,9 +449,11 @@ class LocaleRegexURLResolver(RegexURLResolver):
 
     @property
     def regex(self):
+        from django.conf import settings
+        locale_path_prefix = getattr(settings, 'LOCALE_PATH_PREFIX', '')
         language_code = get_language()
         if language_code not in self._regex_dict:
-            regex_compiled = re.compile('^%s/' % language_code, re.UNICODE)
+            regex_compiled = re.compile('^{0}{1}/'.format(locale_path_prefix, language_code), re.UNICODE)
             self._regex_dict[language_code] = regex_compiled
         return self._regex_dict[language_code]
 
